@@ -59,6 +59,10 @@ func (c *WorkwxApp) accessTokenRefresher() {
 	}
 }
 
+func (c *WorkwxApp) SyncAccessToken() error {
+	return c.syncAccessToken()
+}
+
 // SpawnAccessTokenRefresher 启动该 app 的 access token 刷新 goroutine
 //
 // NOTE: 该 goroutine 本身没有 keep-alive 逻辑，需要自助保活
