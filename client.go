@@ -100,6 +100,15 @@ func (c *WorkwxApp) composeQyapiURLWithToken(path string, req interface{}, withA
 		_ = c.syncAccessToken()
 		c.tokenMu.RLock()
 	}
+	// check whether the token has expired
+	{
+		c.tokenMu.RLock()
+		expireTime := c.lastRefresh.Add((c.tokenExpiresIn - 60) * time.Second)
+		c.tokenMu.RUnlock()
+		if expireTime.Before(time.Now()) {
+			_ = c.syncAccessToken()
+		}
+	}
 	tokenToUse := c.accessToken
 	c.tokenMu.RUnlock()
 
